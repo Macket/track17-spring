@@ -1,6 +1,11 @@
 package track.lessons.lesson1;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
+import static jdk.nashorn.internal.objects.Global.NaN;
 
 /**
  * Задание 1: Реализовать два метода
@@ -31,7 +36,18 @@ public class CountWords {
      * @return - целое число - сумма всех чисел из файла
      */
     public long countNumbers(File file) throws Exception {
-        return 0;
+        int sum = 0;
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String string;
+        while ((string = br.readLine()) != null) {
+            try {
+                sum += Integer.parseInt(string);
+            } catch (NumberFormatException ex) {
+
+            }
+        }
+        br.close();
+        return sum;
     }
 
 
@@ -43,7 +59,16 @@ public class CountWords {
      * @return - результирующая строка
      */
     public String concatWords(File file) throws Exception {
-        return null;
+        StringBuilder finalString = new StringBuilder();
+        String string;
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        while ((string = reader.readLine()) != null) {
+            if (string.trim().length() != 0 && !string.matches("^-?\\d+$")) {
+                finalString.append(" ").append(string);
+            }
+        }
+        reader.close();
+        return finalString.toString().trim();
     }
 
 }
