@@ -36,12 +36,12 @@ public class CountWords {
      * @return - целое число - сумма всех чисел из файла
      */
     public long countNumbers(File file) throws Exception {
-        int sum = 0;
+        long sum = 0;
         BufferedReader br = new BufferedReader(new FileReader(file));
         String string;
         while ((string = br.readLine()) != null) {
             try {
-                sum += Integer.parseInt(string);
+                sum += Long.parseLong(string);
             } catch (NumberFormatException ex) {
 
             }
