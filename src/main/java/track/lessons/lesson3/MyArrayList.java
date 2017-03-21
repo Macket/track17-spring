@@ -11,15 +11,17 @@ import java.util.NoSuchElementException;
  */
 public class MyArrayList extends List {
     private int[] array;
-    public static final int startLen = 100;
-    private int tail; // Индекс хвоста: указывает на следующую после последней заполненной ячейки
-                    // и задает фактическую длину массива
-    private int len; // Длина, доступная для зополнения без расширения массива
+    static final int DEFAULT_CAPACITY = 100;
+    static final int EXPANSION_MULTIPLIER = 2;
+    private int size; // Индекс хвоста: указывает на следующую после последней заполненной ячейки
+                    // и задает фактический размер массива
+    private int capacity; // Длина, доступная для зополнения без расширения массива
+
 
     public MyArrayList() {
-        array = new int[startLen];
-        len = startLen;
-        tail = 0;
+        array = new int[DEFAULT_CAPACITY];
+        capacity = DEFAULT_CAPACITY;
+        size = 0;
     }
 
     public MyArrayList(int capacity) {
@@ -28,38 +30,35 @@ public class MyArrayList extends List {
             System.out.println("Размер не может быть меньше 1. Создан массив размером 1.");
         }
         array = new int[capacity];
-        len = capacity;
-        tail = 0;
+        this.capacity = capacity;
+        size = 0;
     }
 
     @Override
     void add(int item) {
-        if (tail == len) {
-            int[] arrayTemp = new int[len + startLen];
-            System.arraycopy(array, 0, arrayTemp,0 , len);
+        if (size == capacity) {
+            int[] arrayTemp = new int[capacity * EXPANSION_MULTIPLIER];
+            System.arraycopy(array, 0, arrayTemp,0 , capacity);
             array = arrayTemp;
-            len += startLen;
+            capacity *= EXPANSION_MULTIPLIER;
         }
-        array[tail++] = item;
+        array[size++] = item;
     }
 
     @Override
     int remove(int idx) throws NoSuchElementException {
-        if (idx >= tail || idx < 0) {
+        if (idx >= size || idx < 0) {
             throw new NoSuchElementException();
         } else {
             int item = array[idx];
-            int[] arrayTemp = new int[len];
-            System.arraycopy(array, 0, arrayTemp,0 , idx);
-            System.arraycopy(array, idx + 1, arrayTemp,idx , --tail - idx);
-            array = arrayTemp;
-            return array[idx];
+            System.arraycopy(array, idx + 1, array, idx , --size - idx);
+            return item;
         }
     }
 
     @Override
     int get(int idx) throws NoSuchElementException {
-        if (idx >= tail || idx < 0) {
+        if (idx >= size || idx < 0) {
             throw new NoSuchElementException();
         } else {
             return array[idx];
@@ -68,7 +67,7 @@ public class MyArrayList extends List {
 
     @Override
     int size() {
-        return tail;
+        return size;
     }
 
 }

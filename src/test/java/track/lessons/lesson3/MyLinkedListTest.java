@@ -56,4 +56,84 @@ public class MyLinkedListTest {
 
         Assert.assertTrue(list.size() == 0);
     }
+
+    @Test
+    public void stackPush(){
+        MyLinkedList stack = new MyLinkedList();
+        stack.push(1);
+
+        Assert.assertTrue(stack.size() == 1);
+    }
+
+    @Test
+    public void stackPop(){
+        MyLinkedList stack = new MyLinkedList();
+        stack.push(1);
+        stack.pop();
+
+        Assert.assertTrue(stack.size() == 0);
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void emptyStack() throws Exception {
+        MyLinkedList stack = new MyLinkedList();
+        Assert.assertTrue(stack.size() == 0);
+        stack.pop();
+    }
+
+    @Test
+    public void stackPushPop() throws Exception {
+        MyLinkedList stack = new MyLinkedList();
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
+
+        Assert.assertEquals(3, stack.size());
+
+        Assert.assertEquals(3, stack.pop());
+        Assert.assertEquals(2, stack.pop());
+        Assert.assertEquals(1, stack.pop());
+
+        Assert.assertTrue(stack.size() == 0);
+    }
+
+    @Test
+    public void queueEnqueue(){
+        MyLinkedList queue = new MyLinkedList();
+        queue.enqueue(1);
+
+        Assert.assertTrue(queue.size() == 1);
+    }
+
+    @Test
+    public void queueDequeue(){
+        MyLinkedList queue = new MyLinkedList();
+        queue.enqueue(1);
+        queue.dequeue();
+
+        Assert.assertTrue(queue.size() == 0);
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void emptyQueue() throws Exception {
+        MyLinkedList queue = new MyLinkedList();
+        Assert.assertTrue(queue.size() == 0);
+        queue.dequeue();
+    }
+
+    @Test
+    public void queueEnqueueDequeue() throws Exception {
+        MyLinkedList queue = new MyLinkedList();
+        queue.enqueue(1);
+        queue.enqueue(2);
+        queue.enqueue(3);
+
+        Assert.assertEquals(3, queue.size());
+
+        Assert.assertEquals(1, queue.dequeue());
+        Assert.assertEquals(2, queue.dequeue());
+        Assert.assertEquals(3, queue.dequeue());
+
+        Assert.assertTrue(queue.size() == 0);
+    }
 }
