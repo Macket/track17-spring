@@ -37,7 +37,7 @@ public class Container {
                 bean = iterator.next();
             } while (!bean.getId().equals(id));
 
-            // Создаем объект класса и вносим его в обе мапы
+            // Создаем объект класса и вносим его в мап
             Class clazz = Class.forName(bean.getClassName());
             Object obj = clazz.newInstance();
             idMap.put(bean.getId(), obj);
@@ -49,12 +49,29 @@ public class Container {
                 Property property = entry.getValue();
                 Field field = clazz.getDeclaredField(property.getName());
                 field.setAccessible(true);
+                // Обработка примитивных типов
                 if (property.getType() == ValueType.VAL) {
-                    try {
-                        field.setInt(obj, Integer.parseInt(property.getValue()));
-                    } catch (Exception ex) {
-                        System.out.println("Невозможно создать объект с таким полем");
+                    switch (field.getType().toString()) {
+                        case "int" : field.setInt(obj, Integer.parseInt(property.getValue()));
+                        break;
+                        case "byte" : field.setByte(obj, Byte.parseByte(property.getValue()));
+                        break;
+                        case "short" : field.setShort(obj, Short.parseShort(property.getValue()));
+                        break;
+                        case "long" : field.setLong(obj, Long.parseLong(property.getValue()));
+                        break;
+                        case "float" : field.setFloat(obj, Float.parseFloat(property.getValue()));
+                        break;
+                        case "double" : field.setDouble(obj, Double.parseDouble(property.getValue()));
+                        break;
+                        case "char" : field.setChar(obj, property.getValue().charAt(0));
+                        break;
+                        case "string" : field.set(obj, property.getValue());
+                        break;
+                        default:
+                            System.out.println("Неверное имя примитивного типа");
                     }
+                    // Обработка ссылочных типов
                 } else {
                     field.set(obj, getById(property.getValue()));
                 }
