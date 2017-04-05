@@ -43,6 +43,8 @@ public class Main {
             System.out.println("Нет такого бина");;
         } catch (ClassCastException ex) {
             System.out.println("Неправильное приведение классов");
+        } catch (Exception ex) {
+            System.out.println("Exception");
         }
         /*
 

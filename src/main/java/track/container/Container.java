@@ -1,8 +1,12 @@
 package track.container;
 
-import java.lang.reflect.Field;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import java.lang.reflect.Field;
+import java.util.NoSuchElementException;
+import java.util.Iterator;
 import track.container.config.Bean;
 import track.container.config.Property;
 import track.container.config.ValueType;
@@ -12,13 +16,17 @@ import track.container.config.ValueType;
  * У него определено 2 публичных метода, можете дописывать свои методы и конструкторы
  */
 public class Container {
-    HashMap<String, Object> idMap;
+    HashMap<String, Object> map;
     List<Bean> beans;
 
     // Реализуйте этот конструктор, используется в тестах!
-    public Container(List<Bean> beans) {
+    public Container(List<Bean> beans) throws Exception {
         this.beans = beans;
-        idMap = new HashMap<String, Object>();
+        map = new HashMap<String, Object>();
+    }
+
+    public static void main(String[] args) throws Exception {
+
     }
 
     /**
@@ -26,8 +34,8 @@ public class Container {
      *  Например, Car car = (Car) container.getById("carBean")
      */
     public Object getById(String id) throws ReflectiveOperationException, NoSuchElementException {
-        if (idMap.containsKey(id)) {
-            return idMap.get(id);
+        if (map.containsKey(id)) {
+            return map.get(id);
         } else {
 
             // Ищем запрашиваемый кдасс среди бинов. Если не находим, выбрасывается NoSuchElementException
@@ -40,7 +48,7 @@ public class Container {
             // Создаем объект класса и вносим его в мап
             Class clazz = Class.forName(bean.getClassName());
             Object obj = clazz.newInstance();
-            idMap.put(bean.getId(), obj);
+            map.put(bean.getId(), obj);
 
             // Пробегаемся по всем характеристикам (properties) и устанавливаем нужные значения
             // для соответствующих полей создаваемого класса
