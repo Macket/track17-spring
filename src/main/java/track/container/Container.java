@@ -25,6 +25,10 @@ public class Container {
         this.beans = beans;
     }
 
+    public static void main(String[] args) throws Exception {
+
+    }
+
     /**
      *  Вернуть объект по имени бина из конфига
      *  Например, Car car = (Car) container.getById("carBean")
