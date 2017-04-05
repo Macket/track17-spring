@@ -73,7 +73,7 @@ public class MyLinkedList extends List implements Queue, Stack {
 
     @Override
     int get(int idx) throws NoSuchElementException {
-        if (idx >= len) {
+        if (idx >= len || idx < 0) {
             throw new NoSuchElementException();
         } else {
             // Поиск элемента

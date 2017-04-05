@@ -15,12 +15,10 @@ public class MyArrayList extends List {
     static final int EXPANSION_MULTIPLIER = 2;
     private int size; // Индекс хвоста: указывает на следующую после последней заполненной ячейки
                     // и задает фактический размер массива
-    private int capacity; // Длина, доступная для зополнения без расширения массива
 
 
     public MyArrayList() {
         array = new int[DEFAULT_CAPACITY];
-        capacity = DEFAULT_CAPACITY;
         size = 0;
     }
 
@@ -30,17 +28,15 @@ public class MyArrayList extends List {
             System.out.println("Размер не может быть меньше 1. Создан массив размером 1.");
         }
         array = new int[capacity];
-        this.capacity = capacity;
         size = 0;
     }
 
     @Override
     void add(int item) {
-        if (size == capacity) {
-            int[] arrayTemp = new int[capacity * EXPANSION_MULTIPLIER];
-            System.arraycopy(array, 0, arrayTemp,0 , capacity);
+        if (size == array.length) {
+            int[] arrayTemp = new int[array.length * EXPANSION_MULTIPLIER];
+            System.arraycopy(array, 0, arrayTemp,0 , array.length);
             array = arrayTemp;
-            capacity *= EXPANSION_MULTIPLIER;
         }
         array[size++] = item;
     }
