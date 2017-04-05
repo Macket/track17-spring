@@ -3,12 +3,9 @@ package track.container;
 import java.lang.reflect.Field;
 import java.util.*;
 
-import track.container.beans.Engine;
 import track.container.config.Bean;
 import track.container.config.Property;
 import track.container.config.ValueType;
-
-import static java.lang.String.valueOf;
 
 /**
  * Основной класс контейнера
@@ -26,16 +23,9 @@ public class Container {
     }
 
     public static void main(String[] args) throws Exception {
-        Engine engine = new Engine();
-        Field field = engine.getClass().getField("power");
-        String string = field.getType().toString();
-        System.out.println(string);
+
     }
 
-    /**
-     *  Вернуть объект по имени бина из конфига
-     *  Например, Car car = (Car) container.getById("carBean")
-     */
     public Object getById(String id) throws ReflectiveOperationException, NoSuchElementException {
         if (idMap.containsKey(id)) {
             return idMap.get(id);
@@ -64,21 +54,21 @@ public class Container {
                 if (property.getType() == ValueType.VAL) {
                     switch (field.getType().toString()) {
                         case "int" : field.setInt(obj, Integer.parseInt(property.getValue()));
-                        break;
+                            break;
                         case "byte" : field.setByte(obj, Byte.parseByte(property.getValue()));
-                        break;
+                            break;
                         case "short" : field.setShort(obj, Short.parseShort(property.getValue()));
-                        break;
+                            break;
                         case "long" : field.setLong(obj, Long.parseLong(property.getValue()));
-                        break;
+                            break;
                         case "float" : field.setFloat(obj, Float.parseFloat(property.getValue()));
-                        break;
+                            break;
                         case "double" : field.setDouble(obj, Double.parseDouble(property.getValue()));
-                        break;
+                            break;
                         case "char" : field.setChar(obj, property.getValue().charAt(0));
-                        break;
+                            break;
                         case "string" : field.set(obj, property.getValue());
-                        break;
+                            break;
                         default:
                             System.out.println("Неверное имя примитивного типа");
                     }
