@@ -16,16 +16,13 @@ import track.container.config.ValueType;
  * У него определено 2 публичных метода, можете дописывать свои методы и конструкторы
  */
 public class Container {
-    Map<String, Object> map = new HashMap<>();
-    List<Bean> beans;
+
+    private Map<String, Object> map = new HashMap<>();
+    private List<Bean> beans;
 
     // Реализуйте этот конструктор, используется в тестах!
     public Container(List<Bean> beans) throws Exception {
         this.beans = beans;
-    }
-
-    public static void main(String[] args) throws Exception {
-
     }
 
     /**
