@@ -1,15 +1,14 @@
 package track.container;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import java.lang.reflect.Field;
-import java.util.NoSuchElementException;
-import java.util.Iterator;
+import java.util.*;
+
+import track.container.beans.Engine;
 import track.container.config.Bean;
 import track.container.config.Property;
 import track.container.config.ValueType;
+
+import static java.lang.String.valueOf;
 
 /**
  * Основной класс контейнера
@@ -17,16 +16,20 @@ import track.container.config.ValueType;
  */
 public class Container {
 
-    private Map<String, Object> map = new HashMap<>();
+    private Map<String, Object> idMap;
     private List<Bean> beans;
 
     // Реализуйте этот конструктор, используется в тестах!
     public Container(List<Bean> beans) throws Exception {
+        idMap = new HashMap<String, Object>();
         this.beans = beans;
     }
 
     public static void main(String[] args) throws Exception {
-
+        Engine engine = new Engine();
+        Field field = engine.getClass().getField("power");
+        String string = field.getType().toString();
+        System.out.println(string);
     }
 
     /**
@@ -34,8 +37,8 @@ public class Container {
      *  Например, Car car = (Car) container.getById("carBean")
      */
     public Object getById(String id) throws ReflectiveOperationException, NoSuchElementException {
-        if (map.containsKey(id)) {
-            return map.get(id);
+        if (idMap.containsKey(id)) {
+            return idMap.get(id);
         } else {
 
             // Ищем запрашиваемый кдасс среди бинов. Если не находим, выбрасывается NoSuchElementException
@@ -48,7 +51,7 @@ public class Container {
             // Создаем объект класса и вносим его в мап
             Class clazz = Class.forName(bean.getClassName());
             Object obj = clazz.newInstance();
-            map.put(bean.getId(), obj);
+            idMap.put(bean.getId(), obj);
 
             // Пробегаемся по всем характеристикам (properties) и устанавливаем нужные значения
             // для соответствующих полей создаваемого класса
