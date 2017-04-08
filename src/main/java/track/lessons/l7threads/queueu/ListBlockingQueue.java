@@ -5,7 +5,6 @@ import java.util.LinkedList;
 /**
  * TODO: implements on lesson
  */
-
 public class ListBlockingQueue<E> {
 
     public static final int DEFAULT_CAPACITY = 10;
