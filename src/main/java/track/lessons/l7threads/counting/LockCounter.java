@@ -29,5 +29,4 @@ public class LockCounter implements Counter {
         return counter++;
     }
 
-
 }
