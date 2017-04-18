@@ -32,6 +32,7 @@ public class UserStore {
 
         List<User> users = new ArrayList<>();
         String query = "SELECT * FROM users LIMIT " + limit + ";";
+
         try (Statement stmt = dbManager.getConnection().createStatement()) {
             ResultSet rs = null;
             try {
