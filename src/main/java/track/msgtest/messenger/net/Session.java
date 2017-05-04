@@ -1,5 +1,6 @@
 package track.msgtest.messenger.net;
 
+import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import track.msgtest.messenger.User;
 import track.msgtest.messenger.messages.Message;
+import track.msgtest.messenger.messages.TextMessage;
 
 
 /**

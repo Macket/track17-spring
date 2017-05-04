@@ -1,6 +1,5 @@
 package track.lessons.l7threads;
 
-
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 

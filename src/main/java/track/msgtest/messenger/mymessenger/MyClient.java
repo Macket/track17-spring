@@ -11,7 +11,7 @@ import java.net.SocketException;
 import java.util.Scanner;
 
 public class MyClient {
-    private static final int BUFSIZE = 10;
+    private static final int BUFSIZE = 2048;
 
     public static void main(String[] args) throws IOException {
         if (args.length < 1 || args.length > 2) {
@@ -44,12 +44,12 @@ public class MyClient {
 
         outThread.start();
 
-        byte[] data = new byte[1024];
+        byte[] data = new byte[BUFSIZE];
         int bytesRcvd;
 
         while ((bytesRcvd = in.read(data)) != -1) {
             System.out.println("Received:" + new String(data).trim());
-            data = new byte[1024];
+            data = new byte[BUFSIZE];
         }
         //socket.close();
     }
