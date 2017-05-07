@@ -3,11 +3,11 @@ package track.msgtest.messenger.mymessenger;
 /**
  * Created by ivan on 26.04.17.
  */
-public class Message {
+public class MyMessage {
     private byte[] recieveBuf;
     private int recvMsgSize;
 
-    public Message(int recvMsgSize, byte[] recieveBuf) {
+    public MyMessage(int recvMsgSize, byte[] recieveBuf) {
         this.recieveBuf = recieveBuf;
         this.recvMsgSize = recvMsgSize;
     }

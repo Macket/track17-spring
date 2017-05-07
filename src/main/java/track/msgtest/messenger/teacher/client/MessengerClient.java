@@ -1,8 +1,6 @@
 package track.msgtest.messenger.teacher.client;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -10,6 +8,7 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import track.msgtest.messenger.messages.LoginMessage;
 import track.msgtest.messenger.messages.Message;
 import track.msgtest.messenger.messages.TextMessage;
 import track.msgtest.messenger.messages.Type;
@@ -42,6 +41,8 @@ public class MessengerClient {
      */
     private InputStream in;
     private OutputStream out;
+    private ObjectInputStream ois;
+    private ObjectOutputStream oos;
 
     public Protocol getProtocol() {
         return protocol;
@@ -71,23 +72,19 @@ public class MessengerClient {
         Socket socket = new Socket(host, port);
         in = socket.getInputStream();
         out = socket.getOutputStream();
+        ois = new ObjectInputStream(socket.getInputStream());
+        oos = new ObjectOutputStream(socket.getOutputStream());
 
         /*
       Тред "слушает" сокет на наличие входящих сообщений от сервера
      */
         Thread socketListenerThread = new Thread(() -> {
-            final byte[] buf = new byte[1024 * 64];
             log.info("Starting listener thread...");
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     // Здесь поток блокируется на ожидании данных
-                    int read = in.read(buf);
-                    if (read > 0) {
-
-                        // По сети передается поток байт, его нужно раскодировать с помощью протокола
-                        Message msg = protocol.decode(Arrays.copyOf(buf, read));
-                        onMessage(msg);
-                    }
+                    Message msg = (Message) ois.readObject();
+                    onMessage(msg);
                 } catch (Exception e) {
                     log.error("Failed to process connection: {}", e);
                     e.printStackTrace();
@@ -116,17 +113,23 @@ public class MessengerClient {
         String cmdType = tokens[0];
         switch (cmdType) {
             case "/login":
-                // TODO: реализация
+                String[] nameAndPass = tokens[1].split(" ");
+                if (nameAndPass.length > 2) {
+                    System.out.println("Name and password mustn't contain spaces");
+                    break;
+                }
+                LoginMessage sendLoginMessage = new LoginMessage(nameAndPass[0], nameAndPass[1]);
+                send(sendLoginMessage);
                 break;
             case "/help":
                 // TODO: реализация
                 break;
             case "/text":
                 // FIXME: пример реализации для простого текстового сообщения
-                TextMessage sendMessage = new TextMessage();
-                sendMessage.setType(Type.MSG_TEXT);
-                sendMessage.setText(tokens[1]);
-                send(sendMessage);
+                TextMessage sendTextMessage = new TextMessage();
+                sendTextMessage.setType(Type.MSG_TEXT);
+                sendTextMessage.setText(tokens[1]);
+                send(sendTextMessage);
                 break;
             // TODO: implement another types from wiki
 
@@ -140,15 +143,15 @@ public class MessengerClient {
      */
     public void send(Message msg) throws IOException, ProtocolException {
         log.info(msg.toString());
-        out.write(protocol.encode(msg));
-        out.flush(); // принудительно проталкиваем буфер с данными
+        oos.writeObject(msg);
+        oos.flush(); // принудительно проталкиваем буфер с данными
     }
 
     public static void main(String[] args) throws Exception {
 
         MessengerClient client = new MessengerClient();
         client.setHost("localhost");
-        client.setPort(19000);
+        client.setPort(8000);
         client.setProtocol(new StringProtocol());
 
         try {

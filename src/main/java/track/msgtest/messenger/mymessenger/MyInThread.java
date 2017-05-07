@@ -10,11 +10,11 @@ import java.util.LinkedList;
 /**
  * Created by ivan on 22.04.17.
  */
-public class InThread implements Runnable {
+public class MyInThread implements Runnable {
 
     Socket clntSock;
 
-    public InThread(Socket clntSock) {
+    public MyInThread(Socket clntSock) {
         this.clntSock = clntSock;
     }
 
@@ -31,7 +31,7 @@ public class InThread implements Runnable {
 
             while ((recvMsgSize = in.read(recieveBuf)) != -1) {
                 try {
-                    MyServer.recieveMsgs.put(new Message(recvMsgSize, recieveBuf));
+                    MyServer.recieveMsgs.put(new MyMessage(recvMsgSize, recieveBuf));
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }

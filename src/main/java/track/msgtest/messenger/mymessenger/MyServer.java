@@ -16,7 +16,7 @@ public class MyServer {
     public static final int BUFSIZE = 2048;
     private static final int N_THREADS = 2;
     private static LinkedList<OutputStream> outs = new LinkedList<>();
-    public static BlockingQueue<Message> recieveMsgs = new BlockingQueue<>();
+    public static BlockingQueue<MyMessage> recieveMsgs = new BlockingQueue<>();
     //private static LinkedList<Thread> inThreads = new  LinkedList<>();
     private static ExecutorService inThreadPool = Executors.newFixedThreadPool(N_THREADS);
 
@@ -34,7 +34,7 @@ public class MyServer {
             public void run() {
                 while (true) {
                     try {
-                        Message sendMsg = recieveMsgs.take();
+                        MyMessage sendMsg = recieveMsgs.take();
                         for (OutputStream out : outs) {
                             out.write(sendMsg.getRecieveBuf(), 0, sendMsg.getRecvMsgSize());
                             out.flush();
@@ -52,7 +52,7 @@ public class MyServer {
             Socket clntSock = serverSocket.accept();
             outs.addLast(clntSock.getOutputStream());
 
-            inThreadPool.submit(new InThread(clntSock));
+            inThreadPool.submit(new MyInThread(clntSock));
         }
     }
 }
