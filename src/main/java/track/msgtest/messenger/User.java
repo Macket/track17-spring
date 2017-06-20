@@ -6,11 +6,13 @@ import java.util.Objects;
  *
  */
 public class User {
+    private static long lastId = 0;
     private long id;
     private String name;
     private String pass;
 
     public User(String name, String pass) {
+        id = ++lastId;
         this.name = name;
         this.pass = pass;
     }

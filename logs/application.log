@@ -1,4 +1,0 @@
-2017-05-07 11:54:30 INFO  MessengerClient:81 - Starting listener thread...
-2017-05-07 11:54:36 INFO  MessengerClient:102 - Message received: TextMessage{text='hi'}
-:36 INFO  MessengerClient:138 - TextMessage{text='hi'}
-2017-05-07 11:54:36 INFO  MessengerClient:102 - Message received: TextMessage{text='hi'}

@@ -12,6 +12,7 @@ import track.msgtest.messenger.messages.LoginMessage;
 import track.msgtest.messenger.messages.Message;
 import track.msgtest.messenger.messages.TextMessage;
 import track.msgtest.messenger.messages.Type;
+import track.msgtest.messenger.net.BinaryProtocol;
 import track.msgtest.messenger.net.Protocol;
 import track.msgtest.messenger.net.ProtocolException;
 import track.msgtest.messenger.net.StringProtocol;
@@ -41,8 +42,6 @@ public class MessengerClient {
      */
     private InputStream in;
     private OutputStream out;
-    private ObjectInputStream ois;
-    private ObjectOutputStream oos;
 
     public Protocol getProtocol() {
         return protocol;
@@ -72,8 +71,9 @@ public class MessengerClient {
         Socket socket = new Socket(host, port);
         in = socket.getInputStream();
         out = socket.getOutputStream();
-        ois = new ObjectInputStream(socket.getInputStream());
-        oos = new ObjectOutputStream(socket.getOutputStream());
+
+        //ObjectInputStream objectInputStream = new ObjectInputStream(in);
+        //oos = new ObjectOutputStream(out);
 
         /*
       Тред "слушает" сокет на наличие входящих сообщений от сервера
@@ -82,8 +82,13 @@ public class MessengerClient {
             log.info("Starting listener thread...");
             while (!Thread.currentThread().isInterrupted()) {
                 try {
+
+
+
+                    byte[] buf = new byte[2048];
+                    in.read(buf);
                     // Здесь поток блокируется на ожидании данных
-                    Message msg = (Message) ois.readObject();
+                    Message msg = protocol.decode(buf);
                     onMessage(msg);
                 } catch (Exception e) {
                     log.error("Failed to process connection: {}", e);
@@ -143,8 +148,9 @@ public class MessengerClient {
      */
     public void send(Message msg) throws IOException, ProtocolException {
         log.info(msg.toString());
-        oos.writeObject(msg);
-        oos.flush(); // принудительно проталкиваем буфер с данными
+        out.write(protocol.encode(msg));
+
+        out.flush(); // принудительно проталкиваем буфер с данными
     }
 
     public static void main(String[] args) throws Exception {
@@ -152,7 +158,7 @@ public class MessengerClient {
         MessengerClient client = new MessengerClient();
         client.setHost("localhost");
         client.setPort(8000);
-        client.setProtocol(new StringProtocol());
+        client.setProtocol(new BinaryProtocol());
 
         try {
             client.initSocket();
