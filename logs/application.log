@@ -1,0 +1,12 @@
+2017-06-20 15:42:58 INFO  MessengerClient:82 - Starting listener thread...
+2017-06-20 15:43:07 INFO  MessengerClient:114 - Tokens: [/login, sdgfs sgs]
+2017-06-20 15:43:07 INFO  MessengerClient:147 - LoginMessage{name='sdgfs', pass='sgs'}
+2017-06-20 15:43:10 INFO  MessengerClient:114 - Tokens: [/text, yy]
+2017-06-20 15:43:10 INFO  MessengerClient:147 - TextMessage{text='yy'}
+2017-06-20 15:43:10 INFO  MessengerClient:105 - Message received: TextMessage{text='yy'}
+2017-06-20 15:43:21 INFO  MessengerClient:114 - Tokens: [/text, dsgsd]
+2017-06-20 15:43:21 INFO  MessengerClient:147 - TextMessage{text='dsgsd'}
+2017-06-20 15:43:21 INFO  MessengerClient:105 - Message received: TextMessage{text='dsgsd'}
+2017-06-20 15:43:43 INFO  MessengerClient:114 - Tokens: [/text, r]
+2017-06-20 15:43:43 INFO  MessengerClient:147 - TextMessage{text='r'}
+2017-06-20 15:43:43 INFO  MessengerClient:105 - Message received: TextMessage{text='r'}

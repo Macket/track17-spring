@@ -82,9 +82,6 @@ public class MessengerClient {
             log.info("Starting listener thread...");
             while (!Thread.currentThread().isInterrupted()) {
                 try {
-
-
-
                     byte[] buf = new byte[2048];
                     in.read(buf);
                     // Здесь поток блокируется на ожидании данных

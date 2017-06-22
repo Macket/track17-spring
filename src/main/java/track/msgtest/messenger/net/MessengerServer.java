@@ -21,10 +21,11 @@ import java.util.concurrent.Executors;
  */
 public class MessengerServer {
     private static final int N_THREADS = 10;
-    //public static LinkedList<ObjectOutputStream> ooss = new LinkedList<>();
     public static BlockingQueue<Message> recieveMsgs = new BlockingQueue<>();
     private static Map<User, OutputStream> outputStreamMap = new ConcurrentHashMap<>();
     private static ExecutorService inThreadPool = Executors.newFixedThreadPool(N_THREADS);
+    public static final String PATH_TO_DB = "/home/ivan/technotrack/project_java/track17-spring/track.sqlite";
+
 
     public static Map<User, OutputStream> getOutputStreamMap() {
         return outputStreamMap;
@@ -39,33 +40,6 @@ public class MessengerServer {
 
         ServerSocket serverSocket = new ServerSocket(servPort);
 
-//        Thread outThread = new Thread() {
-//            @Override
-//            public void run() {
-//                while (true) {
-//                    try {
-//                        Message sendMsg = recieveMsgs.take();
-//                        for (Map.Entry<User, OutputStream> entry : outputStreamMap.entrySet()) {
-//                            try {
-//                                ObjectOutputStream oos = entry.getValue();
-//                                if (oos == null) {
-//                                    outputStreamMap.remove(entry.getKey());
-//                                    continue;
-//                                }
-//                                oos.writeObject(sendMsg);
-//                                oos.flush();
-//                            } catch (IOException ex) {
-//                                ex.printStackTrace();
-//                            }
-//                        }
-//                    } catch (InterruptedException ex) {
-//                        ex.printStackTrace();
-//                    }
-//                }
-//            }
-//        };
-//
-//        outThread.start();
 
         while (true) {
             Socket clntSock = serverSocket.accept();
@@ -73,11 +47,7 @@ public class MessengerServer {
             SocketAddress clientAddress = clntSock.getRemoteSocketAddress();
             System.out.println("Handling client at " + clientAddress);
 
-            InputStream ois = clntSock.getInputStream();
-            OutputStream oos = clntSock.getOutputStream();
-            //ooss.addLast(new ObjectOutputStream(clntSock.getOutputStream()));
-
-            inThreadPool.submit(new InThread(ois, oos));
+            inThreadPool.submit(new InThread(clntSock));
         }
     }
 }
