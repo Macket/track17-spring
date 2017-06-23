@@ -8,7 +8,7 @@ public interface UserStore {
      * Добавить пользователя в хранилище
      * Вернуть его же
      */
-    User addUser(User user);
+    User addUser(String name, String pass);
 
     /**
      * Обновить информацию о пользователе
@@ -20,7 +20,7 @@ public interface UserStore {
      * Получить пользователя по логину/паролю
      * return null if user not found
      */
-    User getUser(String login, String pass);
+    User getUser(String name, String pass);
 
     /**
      *

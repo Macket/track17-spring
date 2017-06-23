@@ -8,10 +8,7 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import track.msgtest.messenger.messages.LoginMessage;
-import track.msgtest.messenger.messages.Message;
-import track.msgtest.messenger.messages.TextMessage;
-import track.msgtest.messenger.messages.Type;
+import track.msgtest.messenger.messages.*;
 import track.msgtest.messenger.net.BinaryProtocol;
 import track.msgtest.messenger.net.Protocol;
 import track.msgtest.messenger.net.ProtocolException;
@@ -114,6 +111,7 @@ public class MessengerClient {
         log.info("Tokens: {}", Arrays.toString(tokens));
         String cmdType = tokens[0];
         switch (cmdType) {
+
             case "/login":
                 String[] nameAndPass = tokens[1].split(" ");
                 if (nameAndPass.length > 2) {
@@ -123,9 +121,20 @@ public class MessengerClient {
                 LoginMessage sendLoginMessage = new LoginMessage(nameAndPass[0], nameAndPass[1]);
                 send(sendLoginMessage);
                 break;
-            case "/help":
-                // TODO: реализация
+
+            case "/chat_create":
+                ChatCreateMessage chatCreateMessage = new ChatCreateMessage(tokens[1]);
+                chatCreateMessage.setType(Type.MSG_CHAT_CREATE);
+                send(chatCreateMessage);
                 break;
+
+            case "/chat_join":
+                ChatJoinMessage chatJoinMessage = new ChatJoinMessage(tokens[1]);
+                chatJoinMessage.setType(Type.MSG_CHAT_JOIN);
+                chatJoinMessage.setName(tokens[1]);
+                send(chatJoinMessage);
+                break;
+
             case "/text":
                 // FIXME: пример реализации для простого текстового сообщения
                 TextMessage sendTextMessage = new TextMessage();

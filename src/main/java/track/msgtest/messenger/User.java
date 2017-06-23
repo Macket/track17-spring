@@ -7,6 +7,7 @@ import java.util.Objects;
  */
 public class User {
     private long id;
+    private long currentChatId = -1;
     private String name;
     private String pass;
 
@@ -14,6 +15,14 @@ public class User {
         this.id = id;
         this.name = name;
         this.pass = pass;
+    }
+
+    public long getCurrentChatId() {
+        return currentChatId;
+    }
+
+    public void setCurrentChatId(long currentChatId) {
+        this.currentChatId = currentChatId;
     }
 
     public String getName() {

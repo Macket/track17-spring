@@ -9,7 +9,16 @@ public abstract class Message implements Serializable {
 
     protected Long id;
     protected Long senderId;
+    protected String senderName;
     protected Type type;
+
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
 
     public Long getId() {
         return id;

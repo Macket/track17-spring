@@ -21,14 +21,13 @@ import java.util.concurrent.Executors;
  */
 public class MessengerServer {
     private static final int N_THREADS = 10;
-    public static BlockingQueue<Message> recieveMsgs = new BlockingQueue<>();
-    private static Map<User, OutputStream> outputStreamMap = new ConcurrentHashMap<>();
+    private static Map<User, Socket> clntSocketMap = new ConcurrentHashMap<>();
     private static ExecutorService inThreadPool = Executors.newFixedThreadPool(N_THREADS);
     public static final String PATH_TO_DB = "/home/ivan/technotrack/project_java/track17-spring/track.sqlite";
 
 
-    public static Map<User, OutputStream> getOutputStreamMap() {
-        return outputStreamMap;
+    public static Map<User, Socket> getClntSocketMap() {
+        return clntSocketMap;
     }
 
     public static void main(String[] args) throws IOException {

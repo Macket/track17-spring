@@ -3,6 +3,7 @@ package track.msgtest.messenger.store;
 import java.util.List;
 
 import track.msgtest.messenger.messages.Message;
+import track.msgtest.messenger.messages.TextMessage;
 
 
 public interface MessageStore {
@@ -29,7 +30,7 @@ public interface MessageStore {
     /**
      * Добавить сообщение в чат
      */
-    void addMessage(Long chatId, Message message);
+    void addMessage(TextMessage message);
 
     /**
      * Добавить пользователя к чату

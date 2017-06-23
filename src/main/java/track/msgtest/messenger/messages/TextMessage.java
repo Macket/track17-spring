@@ -6,7 +6,9 @@ import java.util.Objects;
  * Простое текстовое сообщение
  */
 public class TextMessage extends Message {
+    private String ownerName;
     private String text;
+
 
     public String getText() {
         return text;
