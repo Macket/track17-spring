@@ -9,6 +9,8 @@ import track.msgtest.messenger.store.UserStore;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,6 +46,7 @@ public class InThread implements Runnable {
         Type type = msg.getType();
         ChatStore chatStore = new DbManager();
         UserStore userStore = new DbManager();
+        MessageStore messageStore = new DbManager();
 
         switch (type) {
 
@@ -54,10 +57,10 @@ public class InThread implements Runnable {
                 TextMessage textMessage = (TextMessage) msg;
                 textMessage.setSenderId(user.getId());
                 textMessage.setSenderName(user.getName());
+                textMessage.setChatId(user.getCurrentChatId());
                 clntSocketMap.forEach((user, socket) -> {
                     try {
                         if (user.getCurrentChatId() > 0) {
-                            MessageStore messageStore = new DbManager();
                             messageStore.addMessage(textMessage);
                             if (user.getCurrentChatId() == this.user.getCurrentChatId()) {
                                 sendMessage(textMessage, user, socket);
@@ -96,6 +99,33 @@ public class InThread implements Runnable {
             case MSG_CHAT_JOIN:
                 ChatJoinMessage chatJoinMessage = (ChatJoinMessage) msg;
                 user.setCurrentChatId(chatStore.joinChat(user.getId(), chatJoinMessage.getName()));
+                break;
+
+            case MSG_CHAT_EXIT:
+                user.setCurrentChatId(-1);
+                break;
+
+            case MSG_CHAT_LIST:
+                String chats = chatStore.getChats(user.getId());
+                TextMessage sendTextMessage = new TextMessage();
+                sendTextMessage.setType(Type.MSG_TEXT);
+                sendTextMessage.setText(chats);
+                try {
+                    sendMessage(sendTextMessage, user, clntSocketMap.get(user));
+                } catch (Exception e) {
+
+                }
+                break;
+
+            case MSG_CHAT_HIST:
+                List<TextMessage> hist = messageStore.getMessagesFromChat(user.getCurrentChatId());
+                for (TextMessage textMsg : hist) {
+                    try {
+                        sendMessage(textMsg, user, clntSocketMap.get(user));
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
                 break;
 
             default:

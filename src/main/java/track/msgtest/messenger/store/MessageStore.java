@@ -20,7 +20,7 @@ public interface MessageStore {
     /**
      * Список сообщений из чата
      */
-    List<Long> getMessagesFromChat(Long chatId);
+    List<TextMessage> getMessagesFromChat(Long chatId);
 
     /**
      * Получить информацию о сообщении
@@ -32,9 +32,5 @@ public interface MessageStore {
      */
     void addMessage(TextMessage message);
 
-    /**
-     * Добавить пользователя к чату
-     */
-    void addUserToChat(Long userId, Long chatId);
 
 }

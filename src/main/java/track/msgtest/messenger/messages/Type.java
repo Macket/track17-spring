@@ -12,6 +12,7 @@ public enum Type {
     MSG_CHAT_CREATE, // в ответ MSG_STATUS
     MSG_CHAT_HIST, // в ответ MSG_CHAT_HIST_RESULT,
     MSG_CHAT_JOIN,
+    MSG_CHAT_EXIT,
 
     // Сообщения от сервера клиенту
     MSG_STATUS,

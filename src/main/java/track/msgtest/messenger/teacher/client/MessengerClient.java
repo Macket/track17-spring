@@ -114,12 +114,13 @@ public class MessengerClient {
 
             case "/login":
                 String[] nameAndPass = tokens[1].split(" ");
-                if (nameAndPass.length > 2) {
-                    System.out.println("Name and password mustn't contain spaces");
+                if (nameAndPass.length != 2) {
+                    System.out.println("Ошибка входа");
                     break;
+                } else {
+                    LoginMessage sendLoginMessage = new LoginMessage(nameAndPass[0], nameAndPass[1]);
+                    send(sendLoginMessage);
                 }
-                LoginMessage sendLoginMessage = new LoginMessage(nameAndPass[0], nameAndPass[1]);
-                send(sendLoginMessage);
                 break;
 
             case "/chat_create":
@@ -133,6 +134,24 @@ public class MessengerClient {
                 chatJoinMessage.setType(Type.MSG_CHAT_JOIN);
                 chatJoinMessage.setName(tokens[1]);
                 send(chatJoinMessage);
+                break;
+
+            case "/chat_exit":
+                ChatExitMessage chatExitMessage = new ChatExitMessage();
+                chatExitMessage.setType(Type.MSG_CHAT_EXIT);
+                send(chatExitMessage);
+                break;
+
+            case "/chat_list":
+                ChatListMessage chatListMessage = new ChatListMessage();
+                chatListMessage.setType(Type.MSG_CHAT_LIST);
+                send(chatListMessage);
+                break;
+
+            case "/chat_hist":
+                ChatHistMessage chatHistMessage = new ChatHistMessage();
+                chatHistMessage.setType(Type.MSG_CHAT_HIST);
+                send(chatHistMessage);
                 break;
 
             case "/text":

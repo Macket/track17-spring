@@ -8,7 +8,15 @@ import java.util.Objects;
 public class TextMessage extends Message {
     private String ownerName;
     private String text;
+    private long chatId = -1;
 
+    public long getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(long chatId) {
+        this.chatId = chatId;
+    }
 
     public String getText() {
         return text;
