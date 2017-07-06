@@ -1,15 +1,8 @@
-2017-07-05 16:16:51 INFO  MessengerClient:79 - Starting listener thread...
-2017-07-05 16:16:56 INFO  MessengerClient:111 - Tokens: [/login, 1 1]
-2017-07-05 16:16:56 INFO  MessengerClient:175 - LoginMessage{name='1', pass='1'}
-2017-07-05 16:17:13 INFO  MessengerClient:111 - Tokens: [/chat_join, 1]
-2017-07-05 16:17:13 INFO  MessengerClient:175 - track.msgtest.messenger.messages.ChatJoinMessage@69222c14
-2017-07-05 16:17:18 INFO  MessengerClient:111 - Tokens: [/chat_hist]
-2017-07-05 16:17:18 INFO  MessengerClient:175 - track.msgtest.messenger.messages.ChatHistMessage@16b3fc9e
-2017-07-05 16:17:18 INFO  MessengerClient:102 - Message received: TextMessage{text='rrr'}
-2017-07-05 16:17:29 INFO  MessengerClient:111 - Tokens: [/text, hi]
-2017-07-05 16:17:29 INFO  MessengerClient:175 - TextMessage{text='hi'}
-2017-07-05 16:17:29 INFO  MessengerClient:102 - Message received: TextMessage{text='hi'}
-2017-07-05 16:17:35 INFO  MessengerClient:111 - Tokens: [/chat_hist]
-2017-07-05 16:17:35 INFO  MessengerClient:175 - track.msgtest.messenger.messages.ChatHistMessage@5ccd43c2
-2017-07-05 16:17:35 INFO  MessengerClient:102 - Message received: TextMessage{text='rrr'}
-2017-07-05 16:17:35 INFO  MessengerClient:102 - Message received: TextMessage{text='hi'}
+2017-07-06 17:17:24 INFO  MessengerClient:79 - Starting listener thread...
+2017-07-06 17:17:29 INFO  MessengerClient:111 - Tokens: [/login, 1 1]
+2017-07-06 17:17:29 INFO  MessengerClient:175 - LoginMessage{name='1', pass='1'}
+2017-07-06 17:17:41 INFO  MessengerClient:111 - Tokens: [/chat_join, 1]
+2017-07-06 17:17:41 INFO  MessengerClient:175 - track.msgtest.messenger.messages.ChatJoinMessage@69222c14
+2017-07-06 17:17:49 INFO  MessengerClient:111 - Tokens: [/text, vse]
+2017-07-06 17:17:49 INFO  MessengerClient:175 - TextMessage{text='vse'}
+2017-07-06 17:17:49 INFO  MessengerClient:102 - Message received: TextMessage{text='vse'}

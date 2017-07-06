@@ -1,15 +1,19 @@
 package track.msgtest.messenger.net;
 
 import track.msgtest.messenger.User;
+import track.msgtest.messenger.net.command.Command;
+import track.msgtest.messenger.net.command.Commands;
+import track.msgtest.messenger.net.command.TextCommand;
 import track.msgtest.messenger.messages.*;
 import track.msgtest.messenger.store.ChatStore;
 import track.msgtest.messenger.store.DbManager;
 import track.msgtest.messenger.store.MessageStore;
 import track.msgtest.messenger.store.UserStore;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,11 +25,32 @@ public class InThread implements Runnable {
     private Socket clntSock;
     private User user;
     private InputStream is;
-    private Protocol protocol = new BinaryProtocol();
+    private Protocol protocol;
+    private static Commands commands;
 
     public InThread(Socket clntSock) throws IOException {
         this.clntSock = clntSock;
+        user = null;
         is = clntSock.getInputStream();
+        protocol = new BinaryProtocol();
+        commands = new Commands();
+
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setClntSock(Socket clntSock) {
+        this.clntSock = clntSock;
+    }
+
+    public Socket getClntSock() {
+        return clntSock;
     }
 
     @Override
@@ -35,117 +60,16 @@ public class InThread implements Runnable {
                 byte[] buf = new byte[2048];
                 is.read(buf);
                 Message msg = protocol.decode(buf);
-                onMessage(msg);
+                onMessage(msg, this);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    public void onMessage(Message msg) {
+    public void onMessage(Message msg, InThread inThread) {
         Type type = msg.getType();
-        ChatStore chatStore = new DbManager();
-        UserStore userStore = new DbManager();
-        MessageStore messageStore = new DbManager();
-
-        switch (type) {
-
-            case MSG_TEXT:
-                if (user.getCurrentChatId() < 0) {
-                    break;
-                }
-                TextMessage textMessage = (TextMessage) msg;
-                textMessage.setSenderId(user.getId());
-                textMessage.setSenderName(user.getName());
-                textMessage.setChatId(user.getCurrentChatId());
-                clntSocketMap.forEach((user, socket) -> {
-                    try {
-                        if (user.getCurrentChatId() > 0) {
-                            messageStore.addMessage(textMessage);
-                            if (user.getCurrentChatId() == this.user.getCurrentChatId()) {
-                                sendMessage(textMessage, user, socket);
-                            }
-                        }
-                    } catch (IOException ioex) {
-                        close(user, socket);
-                        System.out.println("Failed to send message to " + socket);
-                    } catch (ProtocolException pex) {
-                        pex.printStackTrace();
-                    }
-                });
-                break;
-
-            case MSG_LOGIN:
-                LoginMessage loginMessage = (LoginMessage) msg;
-                user = userStore.getUser(loginMessage.getName(), loginMessage.getPass());
-                if (user == null) {
-                    user = userStore.addUser(loginMessage.getName(), loginMessage.getPass());
-                }
-                if (user == null) {
-                    System.out.println("Ошибка входа");
-                    // отправить пользователю
-                } else {
-                    clntSocketMap.putIfAbsent(user, clntSock);
-                }
-                break;
-
-            case MSG_CHAT_CREATE:
-                ChatCreateMessage chatCreateMessage = (ChatCreateMessage) msg;
-                chatCreateMessage.setSenderId(user.getId());
-                long chatId = chatStore.createChat(chatCreateMessage);
-                user.setCurrentChatId(chatId);
-                break;
-
-            case MSG_CHAT_JOIN:
-                ChatJoinMessage chatJoinMessage = (ChatJoinMessage) msg;
-                user.setCurrentChatId(chatStore.joinChat(user.getId(), chatJoinMessage.getName()));
-                break;
-
-            case MSG_CHAT_EXIT:
-                user.setCurrentChatId(-1);
-                break;
-
-            case MSG_CHAT_LIST:
-                String chats = chatStore.getChats(user.getId());
-                TextMessage sendTextMessage = new TextMessage();
-                sendTextMessage.setType(Type.MSG_TEXT);
-                sendTextMessage.setText(chats);
-                try {
-                    sendMessage(sendTextMessage, user, clntSocketMap.get(user));
-                } catch (Exception e) {
-
-                }
-                break;
-
-            case MSG_CHAT_HIST:
-                List<TextMessage> hist = messageStore.getMessagesFromChat(user.getCurrentChatId());
-                for (TextMessage textMsg : hist) {
-                    try {
-                        sendMessage(textMsg, user, clntSocketMap.get(user));
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                break;
-
-            default:
-                System.out.println("Ошибка ввода");
-        }
-    }
-
-    public void sendMessage(Message msg, User user, Socket socket) throws ProtocolException, IOException {
-        OutputStream out = socket.getOutputStream();
-        out.write(protocol.encode(msg));
-        out.flush();
-    }
-
-    public void close(User user, Socket socket) {
-        try {
-            socket.close();
-            clntSocketMap.remove(user, socket);
-        } catch (IOException ex) {
-
-        }
+        commands.getCommand(type).execute(msg, inThread);
     }
 }
 
