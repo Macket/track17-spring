@@ -1,16 +1,11 @@
 package track.msgtest.messenger.net;
 
-import org.omg.CORBA.Object;
 import track.msgtest.messenger.User;
-import track.msgtest.messenger.messages.Message;
-import track.msgtest.messenger.blockingqueue.BlockingQueue;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;

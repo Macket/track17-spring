@@ -12,7 +12,7 @@ import track.msgtest.messenger.messages.*;
 import track.msgtest.messenger.net.BinaryProtocol;
 import track.msgtest.messenger.net.Protocol;
 import track.msgtest.messenger.net.ProtocolException;
-import track.msgtest.messenger.net.StringProtocol;
+import track.msgtest.messenger.teacher.client.command.Commands;
 
 
 /**
@@ -33,6 +33,12 @@ public class MessengerClient {
     private Protocol protocol;
     private int port;
     private String host;
+
+    /**
+     * Комманды, которые вызываются по ключам
+     *
+     * */
+    private static Commands commands;
 
     /**
      * С каждым сокетом связано 2 канала in/out
@@ -68,9 +74,6 @@ public class MessengerClient {
         Socket socket = new Socket(host, port);
         in = socket.getInputStream();
         out = socket.getOutputStream();
-
-        //ObjectInputStream objectInputStream = new ObjectInputStream(in);
-        //oos = new ObjectOutputStream(out);
 
         /*
       Тред "слушает" сокет на наличие входящих сообщений от сервера
@@ -108,79 +111,28 @@ public class MessengerClient {
      */
     public void processInput(String line) throws IOException, ProtocolException {
         String[] tokens = line.split(" ", 2);
-        log.info("Tokens: {}", Arrays.toString(tokens));
-        String cmdType = tokens[0];
-        switch (cmdType) {
+        if (tokens.length == 1) {
+            log.info("Tokens: {}", Arrays.toString(tokens));
+            try {
+                commands.getCommand(tokens[0]).execute("", out);
+            } catch (NullPointerException ex) {
 
-            case "/login":
-                String[] nameAndPass = tokens[1].split(" ");
-                if (nameAndPass.length != 2) {
-                    System.out.println("Ошибка входа");
-                    break;
-                } else {
-                    LoginMessage sendLoginMessage = new LoginMessage(nameAndPass[0], nameAndPass[1]);
-                    send(sendLoginMessage);
-                }
-                break;
+            }
+        } else {
+            log.info("Tokens: {}", Arrays.toString(tokens));
+            try {
+                commands.getCommand(tokens[0]).execute(tokens[1], out);
+            } catch (NullPointerException ex) {
 
-            case "/chat_create":
-                ChatCreateMessage chatCreateMessage = new ChatCreateMessage(tokens[1]);
-                chatCreateMessage.setType(Type.MSG_CHAT_CREATE);
-                send(chatCreateMessage);
-                break;
-
-            case "/chat_join":
-                ChatJoinMessage chatJoinMessage = new ChatJoinMessage(tokens[1]);
-                chatJoinMessage.setType(Type.MSG_CHAT_JOIN);
-                chatJoinMessage.setName(tokens[1]);
-                send(chatJoinMessage);
-                break;
-
-            case "/chat_exit":
-                ChatExitMessage chatExitMessage = new ChatExitMessage();
-                chatExitMessage.setType(Type.MSG_CHAT_EXIT);
-                send(chatExitMessage);
-                break;
-
-            case "/chat_list":
-                ChatListMessage chatListMessage = new ChatListMessage();
-                chatListMessage.setType(Type.MSG_CHAT_LIST);
-                send(chatListMessage);
-                break;
-
-            case "/chat_hist":
-                ChatHistMessage chatHistMessage = new ChatHistMessage();
-                chatHistMessage.setType(Type.MSG_CHAT_HIST);
-                send(chatHistMessage);
-                break;
-
-            case "/text":
-                // FIXME: пример реализации для простого текстового сообщения
-                TextMessage sendTextMessage = new TextMessage();
-                sendTextMessage.setType(Type.MSG_TEXT);
-                sendTextMessage.setText(tokens[1]);
-                send(sendTextMessage);
-                break;
-            // TODO: implement another types from wiki
-
-            default:
-                log.error("Invalid input: " + line);
+            }
         }
     }
 
-    /**
-     * Отправка сообщения в сокет клиент -> сервер
-     */
-    public void send(Message msg) throws IOException, ProtocolException {
-        log.info(msg.toString());
-        out.write(protocol.encode(msg));
-
-        out.flush(); // принудительно проталкиваем буфер с данными
-    }
 
     public static void main(String[] args) throws Exception {
 
         MessengerClient client = new MessengerClient();
+        commands = new Commands();
         client.setHost("localhost");
         client.setPort(8000);
         client.setProtocol(new BinaryProtocol());

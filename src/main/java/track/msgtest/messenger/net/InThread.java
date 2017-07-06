@@ -1,20 +1,11 @@
 package track.msgtest.messenger.net;
 
 import track.msgtest.messenger.User;
-import track.msgtest.messenger.net.command.Command;
 import track.msgtest.messenger.net.command.Commands;
-import track.msgtest.messenger.net.command.TextCommand;
 import track.msgtest.messenger.messages.*;
-import track.msgtest.messenger.store.ChatStore;
-import track.msgtest.messenger.store.DbManager;
-import track.msgtest.messenger.store.MessageStore;
-import track.msgtest.messenger.store.UserStore;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.io.*;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

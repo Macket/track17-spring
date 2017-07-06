@@ -1,8 +1,16 @@
-2017-07-06 17:17:24 INFO  MessengerClient:79 - Starting listener thread...
-2017-07-06 17:17:29 INFO  MessengerClient:111 - Tokens: [/login, 1 1]
-2017-07-06 17:17:29 INFO  MessengerClient:175 - LoginMessage{name='1', pass='1'}
-2017-07-06 17:17:41 INFO  MessengerClient:111 - Tokens: [/chat_join, 1]
-2017-07-06 17:17:41 INFO  MessengerClient:175 - track.msgtest.messenger.messages.ChatJoinMessage@69222c14
-2017-07-06 17:17:49 INFO  MessengerClient:111 - Tokens: [/text, vse]
-2017-07-06 17:17:49 INFO  MessengerClient:175 - TextMessage{text='vse'}
-2017-07-06 17:17:49 INFO  MessengerClient:102 - Message received: TextMessage{text='vse'}
+2017-07-07 00:43:43 INFO  MessengerClient:82 - Starting listener thread...
+2017-07-07 00:43:49 INFO  MessengerClient:115 - Tokens: [/kf]
+2017-07-07 00:43:53 INFO  MessengerClient:122 - Tokens: [/login, 1 1]
+2017-07-07 00:43:53 INFO  MessengerClient:27 - LoginMessage{name='1', pass='1'}
+2017-07-07 00:44:03 INFO  MessengerClient:115 - Tokens: [/chat_list]
+2017-07-07 00:44:03 INFO  MessengerClient:27 - track.msgtest.messenger.messages.ChatListMessage@69222c14
+2017-07-07 00:44:03 INFO  MessengerClient:105 - Message received: TextMessage{text='Чаты:, 1, first chat'}
+2017-07-07 00:44:22 INFO  MessengerClient:122 - Tokens: [/chat_join, first ch]
+2017-07-07 00:44:22 INFO  MessengerClient:27 - track.msgtest.messenger.messages.ChatJoinMessage@200a570f
+2017-07-07 00:44:28 INFO  MessengerClient:122 - Tokens: [/text, 121]
+2017-07-07 00:44:28 INFO  MessengerClient:27 - TextMessage{text='121'}
+2017-07-07 00:44:41 INFO  MessengerClient:122 - Tokens: [/chat_join, 1]
+2017-07-07 00:44:41 INFO  MessengerClient:27 - track.msgtest.messenger.messages.ChatJoinMessage@5ccd43c2
+2017-07-07 00:44:45 INFO  MessengerClient:122 - Tokens: [/text, dfd]
+2017-07-07 00:44:45 INFO  MessengerClient:27 - TextMessage{text='dfd'}
+2017-07-07 00:44:46 INFO  MessengerClient:105 - Message received: TextMessage{text='dfd'}
