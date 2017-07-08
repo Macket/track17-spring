@@ -1,70 +1,70 @@
 package track.msgtest.messenger.net;
 
-import java.awt.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
-import java.util.Arrays;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import track.msgtest.messenger.User;
-import track.msgtest.messenger.messages.Message;
-import track.msgtest.messenger.messages.TextMessage;
+import track.msgtest.messenger.net.command.Commands;
+import track.msgtest.messenger.messages.*;
 
+import java.io.*;
+import java.net.Socket;
+import java.util.Map;
 
 /**
- * Сессия связывает бизнес-логику и сетевую часть.
- * Бизнес логика представлена объектом юзера - владельца сессии.
- * Сетевая часть привязывает нас к определнному соединению по сети (от клиента)
+ * Created by ivan on 06.05.17.
  */
 public class Session implements Runnable {
-    static Logger log = LoggerFactory.getLogger(Session.class);
-
+    private static Map<User, Socket> clntSocketMap = MessengerServer.getClntSocketMap();
+    private Socket clntSock;
     private User user;
-    private Socket socket;
+    private InputStream is;
     private Protocol protocol;
+    private static Commands commands;
 
-    private InputStream in;
-    private OutputStream out;
+    public Session(Socket clntSock) throws IOException {
+        this.clntSock = clntSock;
+        user = null;
+        is = clntSock.getInputStream();
+        protocol = new BinaryProtocol();
+        commands = new Commands();
 
-    private volatile boolean isActive;
-    private byte[] buffer = new byte[1024 * 16]; // 16 kb
+    }
 
-    public Session(User user, Socket socket, Protocol protocol) throws IOException {
+    public void setUser(User user) {
         this.user = user;
-        this.socket = socket;
-        this.protocol = protocol;
-
-        in = socket.getInputStream();
-        out = socket.getOutputStream();
     }
 
-    public void send(Message msg) throws ProtocolException, IOException {
-        // TODO: Отправить клиенту сообщение
+    public User getUser() {
+        return user;
     }
 
-    public void onMessage(Message msg) {
-        // TODO: Пришло некое сообщение от клиента, его нужно обработать
+    public void setClntSock(Socket clntSock) {
+        this.clntSock = clntSock;
     }
 
-    public void close() {
-        // TODO: закрыть in/out каналы и сокет. Освободить другие ресурсы, если необходимо
+    public Socket getClntSock() {
+        return clntSock;
     }
 
     @Override
     public void run() {
-        while (isActive) {
-            try {
-                int readBytes = in.read(buffer);
-                final byte[] slice = Arrays.copyOfRange(buffer, 0, readBytes);
-
-            } catch (Exception e) {
-                isActive = false;
-                log.error("Session failed: ", e);
+        try {
+            while (true) {
+                byte[] buf = new byte[2048];
+                is.read(buf);
+                Message msg = protocol.decode(buf);
+                onMessage(msg, this);
             }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void onMessage(Message msg, Session session) {
+        Type type = msg.getType();
+        try {
+            commands.getCommand(type).execute(msg, session);
+        } catch (NullPointerException ex) {
+
         }
     }
 }
+

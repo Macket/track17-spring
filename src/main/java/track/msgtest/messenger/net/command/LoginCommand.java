@@ -1,9 +1,8 @@
 package track.msgtest.messenger.net.command;
 
 import track.msgtest.messenger.User;
-import track.msgtest.messenger.messages.LoginMessage;
-import track.msgtest.messenger.messages.Message;
-import track.msgtest.messenger.net.InThread;
+import track.msgtest.messenger.messages.*;
+import track.msgtest.messenger.net.Session;
 
 import java.net.Socket;
 
@@ -13,18 +12,34 @@ import java.net.Socket;
 public class LoginCommand extends Command {
 
 
-    public void execute(Message msg, InThread inThread) {
-        Socket clntSock = inThread.getClntSock();
+    public void execute(Message msg, Session session ) {
+        Socket clntSock = session .getClntSock();
         LoginMessage loginMessage = (LoginMessage) msg;
         User user = userStore.getUser(loginMessage.getName(), loginMessage.getPass());
         if (user == null) {
             user = userStore.addUser(loginMessage.getName(), loginMessage.getPass());
         }
         if (user == null) {
-            System.out.println("Ошибка входа");
+            LoginResultMessage loginResultMessage = new LoginResultMessage();
+            loginResultMessage.setStatus(Status.ERROR);
+            try {
+                sendMessage(loginResultMessage, session .getClntSock());
+            } catch (Exception ex) {
+                System.out.println("Failed to send message to " + session .getClntSock());
+            }
         } else {
             clntSocketMap.putIfAbsent(user, clntSock);
-            inThread.setUser(user);
+            session .setUser(user);
+
+            LoginResultMessage loginResultMessage = new LoginResultMessage();
+            loginResultMessage.setStatus(Status.OK);
+            loginResultMessage.setSenderName(user.getName());
+            loginResultMessage.setType(Type.MSG_LOGIN_RESULT);
+            try {
+                sendMessage(loginResultMessage, session .getClntSock());
+            } catch (Exception ex) {
+                System.out.println("Failed to send message to " + session .getClntSock());
+            }
         }
     }
 }

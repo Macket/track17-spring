@@ -41,7 +41,7 @@ public class MessengerServer {
             SocketAddress clientAddress = clntSock.getRemoteSocketAddress();
             System.out.println("Handling client at " + clientAddress);
 
-            inThreadPool.submit(new InThread(clntSock));
+            inThreadPool.submit(new Session(clntSock));
         }
     }
 }

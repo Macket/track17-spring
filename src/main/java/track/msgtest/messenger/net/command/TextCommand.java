@@ -11,6 +11,7 @@ import track.msgtest.messenger.store.MessageStore;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.sql.Timestamp;
 import java.util.Map;
 
 /**
@@ -18,19 +19,20 @@ import java.util.Map;
  */
 public class TextCommand extends Command {
 
-    public void execute(Message msg, InThread inThread) {
-        User user = inThread.getUser();
-        if (user.getCurrentChatId() > 0) {
+    public void execute(Message msg, Session session ) {
+        User user = session .getUser();
+        if (user != null && user.getCurrentChatId() > 0) {
             TextMessage textMessage = (TextMessage) msg;
             textMessage.setSenderId(user.getId());
             textMessage.setSenderName(user.getName());
             textMessage.setChatId(user.getCurrentChatId());
+            textMessage.setTimestamp(getCurrentTimeStamp());
             clntSocketMap.forEach((reciever, socket) -> {
                 try {
                     if (user.getCurrentChatId() > 0) {
                         messageStore.addMessage(textMessage);
                         if (user.getCurrentChatId() == user.getCurrentChatId()) {
-                            sendMessage(textMessage, user, socket);
+                            sendMessage(textMessage, socket);
                         }
                     }
                 } catch (IOException ioex) {
@@ -50,5 +52,12 @@ public class TextCommand extends Command {
         } catch (IOException ex) {
 
         }
+    }
+
+    private static Timestamp getCurrentTimeStamp() {
+
+        java.util.Date today = new java.util.Date();
+        return new Timestamp(today.getTime());
+
     }
 }

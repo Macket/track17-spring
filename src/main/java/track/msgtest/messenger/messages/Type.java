@@ -15,8 +15,8 @@ public enum Type {
     MSG_CHAT_EXIT,
 
     // Сообщения от сервера клиенту
-    MSG_STATUS,
+    MSG_LOGIN_RESULT,
+    MSG_CURRENT_CHAT,
     MSG_CHAT_LIST_RESULT,
-    MSG_CHAT_HIST_RESULT,
     MSG_INFO_RESULT
 }

@@ -41,6 +41,13 @@ public class MessengerClient {
     private static Commands commands;
 
     /**
+     * Текущие пользователь и чат
+     *
+     * */
+    private String curChat;
+    private String curUser;
+
+    /**
      * С каждым сокетом связано 2 канала in/out
      */
     private InputStream in;
@@ -74,6 +81,8 @@ public class MessengerClient {
         Socket socket = new Socket(host, port);
         in = socket.getInputStream();
         out = socket.getOutputStream();
+        curChat = "none";
+        curUser = "none";
 
         /*
       Тред "слушает" сокет на наличие входящих сообщений от сервера
@@ -102,7 +111,29 @@ public class MessengerClient {
      * Реагируем на входящее сообщение
      */
     public void onMessage(Message msg) {
-        log.info("Message received: {}", msg);
+        Type type = msg.getType();
+        switch (type) {
+            case MSG_TEXT:
+                TextMessage textMessage = (TextMessage) msg;
+                System.out.println("(" + textMessage.getTimestamp().toString() + ") " +
+                        textMessage.getSenderName() + ": " + textMessage.getText());
+                break;
+            case MSG_LOGIN_RESULT:
+                LoginResultMessage loginResultMessage = (LoginResultMessage) msg;
+                if (loginResultMessage.getStatus() == Status.OK) {
+                    curUser = loginResultMessage.getSenderName();
+                    System.out.println("Вы вошли под именем " + curUser + "\n$");
+                } else {
+                    System.out.println("Ошибка входа");
+                }
+                break;
+            case MSG_CURRENT_CHAT:
+                CurrentChatMessage currentChatMessage = (CurrentChatMessage) msg;
+                curChat = currentChatMessage.getChatName();
+                break;
+            default:
+
+        }
     }
 
     /**
@@ -112,14 +143,14 @@ public class MessengerClient {
     public void processInput(String line) throws IOException, ProtocolException {
         String[] tokens = line.split(" ", 2);
         if (tokens.length == 1) {
-            log.info("Tokens: {}", Arrays.toString(tokens));
+            //log.info("Tokens: {}", Arrays.toString(tokens));
             try {
                 commands.getCommand(tokens[0]).execute("", out);
             } catch (NullPointerException ex) {
 
             }
         } else {
-            log.info("Tokens: {}", Arrays.toString(tokens));
+            //log.info("Tokens: {}", Arrays.toString(tokens));
             try {
                 commands.getCommand(tokens[0]).execute(tokens[1], out);
             } catch (NullPointerException ex) {
@@ -146,6 +177,7 @@ public class MessengerClient {
             while (true) {
                 String input = scanner.nextLine();
                 if ("q".equals(input)) {
+
                     return;
                 }
                 try {
@@ -153,6 +185,7 @@ public class MessengerClient {
                 } catch (ProtocolException | IOException e) {
                     log.error("Failed to process user input", e);
                 }
+                System.out.println("$ (Пользователь: " + client.curUser + ", Чат: " + client.curChat + ")");
             }
         } catch (Exception e) {
             log.error("Application failed.", e);

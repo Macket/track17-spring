@@ -107,8 +107,10 @@ public class DbManager implements UserStore, MessageStore, ChatStore {
                 msg.setType(Type.MSG_TEXT);
                 msg.setChatId(chatId);
                 msg.setSenderId(rs.getLong("owner_id"));
+                msg.setSenderName(rs.getString("owner_name"));
                 msg.setId(rs.getLong("id"));
                 msg.setText(rs.getString("msg_text"));
+                msg.setTimestamp(rs.getTimestamp("timestamp"));
                 hist.add(msg);
             }
             stmt.close();
@@ -137,7 +139,7 @@ public class DbManager implements UserStore, MessageStore, ChatStore {
         PreparedStatement stmt = null;
         try {
             stmt = connection.prepareStatement(sql);
-            stmt.setObject(1, getCurrentTimeStamp().toString());
+            stmt.setObject(1, textMessage.getTimestamp().toString());
             stmt.setObject(2, textMessage.getSenderId());
             stmt.setObject(3, textMessage.getChatId());
             stmt.setObject(4, textMessage.getSenderName());

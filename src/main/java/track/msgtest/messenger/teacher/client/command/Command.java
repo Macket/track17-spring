@@ -24,7 +24,7 @@ public abstract class Command {
      * Отправка сообщения в сокет клиент -> сервер
      */
     public void sendMessage(Message msg, OutputStream out) throws IOException, ProtocolException {
-        log.info(msg.toString());
+        //log.info(msg.toString());
         out.write(protocol.encode(msg));
 
         out.flush(); // принудительно проталкиваем буфер с данными

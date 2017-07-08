@@ -25,9 +25,9 @@ public abstract class Command {
 
     protected static Map<User, Socket> clntSocketMap = MessengerServer.getClntSocketMap();
 
-    public abstract void execute(Message msg, InThread inThread);
+    public abstract void execute(Message msg, Session session);
 
-    public void sendMessage(Message msg, User user, Socket socket) throws ProtocolException, IOException {
+    public void sendMessage(Message msg, Socket socket) throws ProtocolException, IOException {
         OutputStream out = socket.getOutputStream();
         out.write(protocol.encode(msg));
         out.flush();

@@ -3,7 +3,7 @@ package track.msgtest.messenger.net.command;
 import track.msgtest.messenger.User;
 import track.msgtest.messenger.messages.ChatCreateMessage;
 import track.msgtest.messenger.messages.Message;
-import track.msgtest.messenger.net.InThread;
+import track.msgtest.messenger.net.Session;
 
 import java.net.Socket;
 
@@ -12,8 +12,8 @@ import java.net.Socket;
  */
 public class ChatCreateCommand extends Command {
 
-    public void execute(Message msg, InThread inThread) {
-        User user = inThread.getUser();
+    public void execute(Message msg, Session session ) {
+        User user = session .getUser();
         ChatCreateMessage chatCreateMessage = (ChatCreateMessage) msg;
         chatCreateMessage.setSenderId(user.getId());
         long chatId = chatStore.createChat(chatCreateMessage);

@@ -1,14 +1,23 @@
 package track.msgtest.messenger.messages;
 
+import java.sql.Timestamp;
 import java.util.Objects;
 
 /**
  * Простое текстовое сообщение
  */
 public class TextMessage extends Message {
-    private String ownerName;
+    private Timestamp timestamp;
     private String text;
     private long chatId = -1;
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public long getChatId() {
         return chatId;
